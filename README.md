@@ -7,7 +7,7 @@ Versão avançada do Jogo da Velha (Ultimate Tic Tac Toe) feita com **React Nati
 Dois jogadores se alternam: X e O
 No início, o primeiro jogador pode jogar em qualquer tabuleiro pequeno
 
-![Tabuleiro principal](docs/images/tabuleiro.PNG)
+![Tabuleiro principal](docs/imagens/tabuleiro.PNG)
 
 A posição da jogada define em qual tabuleiro o próximo jogador deve jogar
 Exemplo:
@@ -15,7 +15,7 @@ Exemplo:
 - O próximo jogador será enviado para o tabuleiro superior direito do tabuleiro principal
 
 
-![Exemplo de jogada](docs/images/jogada.PNG)
+![Exemplo de jogada](docs/imagens/jogada.PNG)
 
 - Se o tabuleiro para onde o jogador foi enviado:
 - Já estiver completo ou
@@ -26,7 +26,7 @@ Exemplo:
 
 Vence quem conquistar 3 tabuleiros pequenos em linha no tabuleiro principal
 
-![Exemplo de Vitória](docs/images/vitoria.PNG)
+![Exemplo de Vitória](docs/imagens/vitoria.PNG)
 
 Empates em tabuleiros pequenos continuam valendo como bloqueados
 Se todos os tabuleiros forem concluídos sem um vencedor no tabuleiro principal, o jogo termina em empate

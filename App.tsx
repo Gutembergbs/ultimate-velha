@@ -3,66 +3,24 @@ import {
   View,
   Text,
   TouchableOpacity,
-  StyleSheet,
   SafeAreaView
 } from 'react-native';
 
-/* =======================
-   TIPOS
-======================= */
-type Player = 'X' | 'O' | null;
-type SmallBoardState = Player[];
+import {
+  emptySmallBoard,
+  checkWinnerWithLine,
+  checkBigWinnerWithLine
+} from './src/helpers/gameLogic';
 
-type SmallWinner = {
-  player: Player;
-  line: number[] | null;
-};
+import {
+  Player,
+  BigBoardState,
+  GameMode
+} from './src/helpers/types';
 
-type BigWinner = {
-  player: Player;
-  line: number[];
-} | null;
-
-type BigBoardState = {
-  boards: SmallBoardState[];
-  winners: (SmallWinner | null)[];
-};
-
-type GameMode = 'LOCAL' | 'AI';
-
-/* =======================
-   HELPERS
-======================= */
-const emptySmallBoard = (): SmallBoardState => Array(9).fill(null);
-
-const winningLines = [
-  [0,1,2],[3,4,5],[6,7,8],
-  [0,3,6],[1,4,7],[2,5,8],
-  [0,4,8],[2,4,6]
-];
-
-const checkWinnerWithLine = (board: SmallBoardState): SmallWinner | null => {
-  for (const l of winningLines) {
-    const [a,b,c] = l;
-    if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-      return { player: board[a], line: l };
-    }
-  }
-  return null;
-};
-
-const checkBigWinnerWithLine = (
-  winners: (SmallWinner | null)[]
-): BigWinner => {
-  const board = winners.map(w => w?.player ?? null);
-  for (const l of winningLines) {
-    const [a,b,c] = l;
-    if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-      return { player: board[a], line: l };
-    }
-  }
-  return null;
-};
+import { evaluateSmall, opponentCanScoreNext } from './src/ai/ai';
+import { SmallBoard } from './src/components/SmallBoard';
+import { styles } from './src/styles/styles';
 
 /* =======================
    APP
@@ -75,7 +33,7 @@ export default function App() {
 
   const [currentPlayer, setCurrentPlayer] = useState<Player>('X');
   const [activeBoard, setActiveBoard] = useState<number | null>(null);
-  const [bigWinner, setBigWinner] = useState<BigWinner>(null);
+  const [bigWinner, setBigWinner] = useState<any>(null);
   const [history, setHistory] = useState<any[]>([]);
   const [mode, setMode] = useState<GameMode>('LOCAL');
 
@@ -94,7 +52,7 @@ export default function App() {
     if (timeLeft <= 0) {
       setTimerRunning(false);
       setTimeLeft(baseTime);
-      setActiveBoard(null); // libera geral
+      setActiveBoard(null);
       setCurrentPlayer(p => p === 'X' ? 'O' : 'X');
       return;
     }
@@ -184,41 +142,16 @@ export default function App() {
   };
 
   /* =======================
-     IA INSANA
+     IA
   ======================= */
   const getPlayableBoards = () => {
     if (activeBoard !== null) return [activeBoard];
     return state.boards.map((_,i)=>i).filter(i => !state.winners[i]);
   };
 
-  const evaluateSmall = (board:SmallBoardState, p:Player) => {
-    let score = 0;
-    for (const l of winningLines) {
-      const v = l.map(i=>board[i]);
-      if (v.filter(x=>x===p).length===2 && v.includes(null)) score+=5;
-      if (v.filter(x=>x===p).length===1 && v.includes(null)) score+=1;
-    }
-    return score;
-  };
-
-  const opponentCanScoreNext = (
-    boards:SmallBoardState[],
-    winners:(SmallWinner|null)[],
-    nextBoard:number
-  ) => {
-    if (winners[nextBoard]) return false;
-    const b = boards[nextBoard];
-    for (let i=0;i<9;i++) {
-      if (b[i]) continue;
-      const t=[...b]; t[i]='X';
-      if (checkWinnerWithLine(t)) return true;
-    }
-    return false;
-  };
-
   const makeAIMove = () => {
-    let bestScore=-Infinity;
-    let best:any=null;
+    let bestScore = -Infinity;
+    let best:any = null;
 
     const moves = state.boards.flat().filter(c=>c).length;
     const early = moves < 6;
@@ -228,74 +161,55 @@ export default function App() {
         if (state.boards[b][i]) continue;
 
         const tb = JSON.parse(JSON.stringify(state.boards));
-        tb[b][i]='O';
+        tb[b][i] = 'O';
 
         let score = 0;
         const sw = checkWinnerWithLine(tb[b]);
-        if (sw) score+=100;
+        if (sw) score += 100;
 
-        const tw=[...state.winners];
-        if (sw) tw[b]=sw;
+        const tw = [...state.winners];
+        if (sw) tw[b] = sw;
 
         const bw = checkBigWinnerWithLine(tw);
-        if (bw) score+=1000;
+        if (bw) score += 1000;
 
-        score += evaluateSmall(tb[b],'O');
-        score -= evaluateSmall(tb[b],'X');
+        score += evaluateSmall(tb[b], 'O');
+        score -= evaluateSmall(tb[b], 'X');
 
-        if (i===4) score+=3;
-        if ([0,2,6,8].includes(i)) score+=2;
+        if (i === 4) score += 3;
+        if ([0,2,6,8].includes(i)) score += 2;
 
-        if (opponentCanScoreNext(tb,tw,i)) score-=50;
-        if (early) score+=Math.random()*5;
+        if (opponentCanScoreNext(tb, tw, i)) score -= 50;
+        if (early) score += Math.random() * 5;
 
-        if (score>bestScore) {
-          bestScore=score;
-          best={b,i};
+        if (score > bestScore) {
+          bestScore = score;
+          best = { b, i };
         }
       }
     }
-    if (best) handleMove(best.b,best.i);
+
+    if (best) handleMove(best.b, best.i);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     if (isAITurn && !bigWinner) {
-      const t=setTimeout(makeAIMove,400);
-      return ()=>clearTimeout(t);
+      const t = setTimeout(makeAIMove, 400);
+      return () => clearTimeout(t);
     }
-  },[currentPlayer]);
+  }, [currentPlayer]);
 
   /* =======================
      RENDER
   ======================= */
   const renderLine = (line:number[]) => {
-    const k=line.join('-');
-    const m:any={
+    const k = line.join('-');
+    const m:any = {
       '0-1-2':styles.lineH1,'3-4-5':styles.lineH2,'6-7-8':styles.lineH3,
       '0-3-6':styles.lineV1,'1-4-7':styles.lineV2,'2-5-8':styles.lineV3,
       '0-4-8':styles.lineD1,'2-4-6':styles.lineD2
     };
     return m[k];
-  };
-
-  const renderSmallBoard = (board:SmallBoardState, idx:number) => {
-    const w = state.winners[idx];
-    const active = activeBoard===null || activeBoard===idx;
-
-    return (
-      <View key={idx} style={[styles.smallBoard,!active&&styles.disabledBoard]}>
-        {board.map((c,i)=>(
-          <TouchableOpacity key={i} style={styles.cell}
-            onPress={()=>handleMove(idx,i)}>
-            <Text style={[
-              styles.cellText,
-              c==='X'?styles.xColor:styles.oColor
-            ]}>{c}</Text>
-          </TouchableOpacity>
-        ))}
-        {w?.line && <View style={[styles.winLine,renderLine(w.line)]} />}
-      </View>
-    );
   };
 
   return (
@@ -333,9 +247,19 @@ export default function App() {
       )}
 
       <View style={styles.bigBoard}>
-        {state.boards.map(renderSmallBoard)}
+        {state.boards.map((board,idx)=>(
+          <SmallBoard
+            key={idx}
+            board={board}
+            index={idx}
+            active={activeBoard===null || activeBoard===idx}
+            winnerLine={state.winners[idx]?.line ?? null}
+            onMove={handleMove}
+            renderLine={renderLine}
+          />
+        ))}
         {bigWinner && (
-          <View style={[styles.bigWinLine,renderLine(bigWinner.line)]} />
+          <View style={[styles.bigWinLine,renderLine(bigWinner.line)]}/>
         )}
       </View>
 
@@ -350,33 +274,3 @@ export default function App() {
     </SafeAreaView>
   );
 }
-
-/* =======================
-   STYLES
-======================= */
-const styles = StyleSheet.create({
-  container:{flex:1,backgroundColor:'#020617',alignItems:'center',justifyContent:'center'},
-  title:{fontSize:26,fontWeight:'bold',color:'#fff'},
-  bigBoard:{width:330,height:330,flexDirection:'row',flexWrap:'wrap',borderWidth:4,borderColor:'#f8fafc'},
-  smallBoard:{width:'33.33%',height:'33.33%',borderWidth:3,borderColor:'#f8fafc',flexDirection:'row',flexWrap:'wrap'},
-  cell:{width:'33.33%',height:'33.33%',borderWidth:1.5,borderColor:'#94a3b8',alignItems:'center',justifyContent:'center'},
-  cellText:{fontSize:26,fontWeight:'bold'},
-  xColor:{color:'#22d3ee'},
-  oColor:{color:'#facc15'},
-  disabledBoard:{opacity:0.5},
-  winLine:{position:'absolute',backgroundColor:'red'},
-  lineH1:{top:'16%',left:0,right:0,height:4},
-  lineH2:{top:'50%',left:0,right:0,height:4},
-  lineH3:{top:'83%',left:0,right:0,height:4},
-  lineV1:{left:'16%',top:0,bottom:0,width:4},
-  lineV2:{left:'50%',top:0,bottom:0,width:4},
-  lineV3:{left:'83%',top:0,bottom:0,width:4},
-  lineD1:{left:'-20%',top:'50%',width:'140%',height:4,transform:[{rotate:'45deg'}]},
-  lineD2:{left:'-20%',top:'50%',width:'140%',height:4,transform:[{rotate:'-45deg'}]},
-  bigWinLine:{position:'absolute',backgroundColor:'red'},
-  buttons:{flexDirection:'row',marginTop:12,gap:10},
-  undoButton:{backgroundColor:'#64748b',padding:12,borderRadius:8},
-  resetButton:{backgroundColor:'#ef4444',padding:12,borderRadius:8},
-  modeBtn:{backgroundColor:'#334155',padding:10,borderRadius:8},
-  buttonText:{color:'#fff',fontWeight:'bold'}
-});

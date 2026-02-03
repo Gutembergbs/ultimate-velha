@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "ultimate-velha",
+    "name": "Ultimate Jogo da Velha",
     "slug": "ultimate-velha",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -25,7 +25,8 @@
       "package": "com.gutemberg_bs.ultimatevelha"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
     },
     "extra": {
       "eas": {

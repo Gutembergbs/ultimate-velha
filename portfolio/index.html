@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#0b1020">
     <meta
       name="description"
-      content="Portfólio de Gutemberg: projetos em React Native, TypeScript e Expo."
+      content="Portfólio de Gutemberg: jogos e projetos web com JavaScript, HTML, CSS, React Native, TypeScript e Expo."
     >
     <title>Gutemberg — Desenvolvedor</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -38,30 +38,33 @@
           <p class="eyebrow"><span class="status-dot"></span> PORTFÓLIO DE DESENVOLVIMENTO</p>
           <h1>Olá, eu sou<br><span class="gradient-text">Gutemberg.</span></h1>
           <p class="hero-description">
-            Desenvolvedor mobile criando experiências digitais com React Native,
-            TypeScript e Expo.
+            Desenvolvedor mobile e web criando experiências com React Native,
+            TypeScript, HTML, CSS e JavaScript.
           </p>
           <div class="hero-actions">
-            <a class="button button-primary" href="#projetos">Conheça meus projetos <span aria-hidden="true">↓</span></a>
-            <a class="button button-quiet" href="https://github.com/Gutembergbs" target="_blank" rel="noreferrer">
-              Meu GitHub <span aria-hidden="true">↗</span>
+            <a class="button button-primary" href="https://gutembergbs.github.io/atari-racing/" target="_blank" rel="noreferrer">
+              Jogar Retro Road Racer <span aria-hidden="true">↗</span>
             </a>
+            <a class="button button-quiet" href="#projetos">Ver projetos <span aria-hidden="true">↓</span></a>
           </div>
           <div class="tech-list" aria-label="Tecnologias">
+            <span>HTML5</span><span>CSS3</span><span>JavaScript</span>
             <span>React Native</span><span>TypeScript</span><span>Expo</span>
           </div>
         </div>
 
-        <div class="hero-art" aria-label="Prévia do jogo Ultimate Jogo da Velha">
+        <div class="hero-art" aria-label="Prévia do jogo Retro Road Racer">
           <div class="art-glow"></div>
-          <div class="game-card">
-            <div class="game-card-top"><span>ULTIMATE TIC-TAC-TOE</span><span class="live-pill">EM DESTAQUE</span></div>
-            <div class="mini-board" aria-hidden="true">
-              <span class="x">X</span><span></span><span class="o">O</span>
-              <span></span><span class="x">X</span><span></span>
-              <span class="o">O</span><span></span><span class="x">X</span>
+          <div class="hero-racer-card">
+            <div class="hero-racer-top"><span>RETRO ROAD RACER</span><span class="live-pill">JOGUE AGORA</span></div>
+            <div class="hero-racer-scene" aria-hidden="true">
+              <span class="hero-racer-sun"></span>
+              <span class="hero-racer-mountains"></span>
+              <span class="hero-racer-road"><i></i><i></i><i></i></span>
+              <span class="hero-racer-coin"></span>
+              <span class="hero-racer-car"></span>
             </div>
-            <div class="game-card-bottom"><span>Uma jogada muda o próximo tabuleiro.</span><span class="arrow">↗</span></div>
+            <div class="hero-racer-bottom"><span>CURVAS · TRÁFEGO · COMBUSTÍVEL</span><span class="arrow">↗</span></div>
           </div>
           <span class="orbit orbit-one"></span><span class="orbit orbit-two"></span>
         </div>
@@ -88,31 +91,41 @@
         </div>
 
         <article class="project-card">
-          <div class="project-visual">
+          <div class="project-visual project-visual--racer-feature">
             <div class="project-visual-glow"></div>
-            <div class="project-board" aria-hidden="true">
-              <span class="x">X</span><span></span><span class="o">O</span>
-              <span></span><span class="o">O</span><span></span>
-              <span class="x">X</span><span></span><span class="x">X</span>
+            <div class="racer-feature-preview" aria-hidden="true">
+              <span class="racer-feature-sun"></span>
+              <span class="racer-feature-mountains"></span>
+              <span class="racer-feature-road">
+                <i class="racer-feature-mark mark-one"></i>
+                <i class="racer-feature-mark mark-two"></i>
+                <i class="racer-feature-mark mark-three"></i>
+              </span>
+              <span class="racer-feature-car"></span>
+              <span class="racer-feature-coin"></span>
+              <span class="racer-feature-fuel"></span>
             </div>
-            <span class="visual-caption">DESAFIE SUA ESTRATÉGIA</span>
+            <span class="visual-caption">CORRIDAS ARCADE · HTML · CSS · JAVASCRIPT</span>
           </div>
           <div class="project-info">
-            <div class="project-meta"><span>01 / APLICATIVO</span><span class="project-status">PROJETO PESSOAL</span></div>
-            <h3>Ultimate Jogo da Velha</h3>
+            <div class="project-meta"><span>01 / JOGO WEB</span><span class="project-status">PROJETO EM DESTAQUE</span></div>
+            <h3>Retro Road Racer</h3>
             <p>
-              Uma versão estratégica do jogo da velha com partidas locais,
-              adversário de IA e modo online.
+              Corrida pseudo-3D com curvas, tráfego e cenários dinâmicos.
+              Desvie dos carros, colete moedas e galões de combustível enquanto
+              a pista acompanha sua velocidade.
             </p>
             <div class="project-tags">
-              <span>React Native</span><span>Expo</span><span>TypeScript</span><span>Supabase</span>
+              <span>HTML5</span><span>CSS3</span><span>JavaScript</span>
             </div>
-            <a class="project-link" href="./jogo/">
-              Jogar no navegador <span aria-hidden="true">↗</span>
-            </a>
-            <a class="project-link" href="https://github.com/Gutembergbs/ultimate-velha" target="_blank" rel="noreferrer">
-              Ver código no GitHub <span aria-hidden="true">↗</span>
-            </a>
+            <div class="project-links">
+              <a class="project-link" href="https://gutembergbs.github.io/atari-racing/" target="_blank" rel="noreferrer">
+                Jogar agora <span aria-hidden="true">↗</span>
+              </a>
+              <a class="project-link" href="https://github.com/Gutembergbs/atari-racing" target="_blank" rel="noreferrer">
+                Ver código no GitHub <span aria-hidden="true">↗</span>
+              </a>
+            </div>
           </div>
         </article>
 
@@ -149,29 +162,31 @@
           </article>
 
           <article class="project-card project-card--compact">
-            <div class="project-visual project-visual--racer">
-              <div class="racer-preview" aria-hidden="true">
-                <div class="racer-road"><span></span></div>
-                <div class="racer-car"></div>
+            <div class="project-visual">
+              <div class="project-visual-glow"></div>
+              <div class="project-board" aria-hidden="true">
+                <span class="x">X</span><span></span><span class="o">O</span>
+                <span></span><span class="o">O</span><span></span>
+                <span class="x">X</span><span></span><span class="x">X</span>
               </div>
-              <span class="visual-caption">RETRO ROAD RACER</span>
+              <span class="visual-caption">DESAFIE SUA ESTRATÉGIA</span>
             </div>
             <div class="project-info">
-              <div class="project-meta"><span>03 / JOGO WEB</span><span class="project-status">PROJETO PESSOAL</span></div>
-              <h3>Retro Road Racer</h3>
+              <div class="project-meta"><span>03 / APLICATIVO</span><span class="project-status">PROJETO PESSOAL</span></div>
+              <h3>Ultimate Jogo da Velha</h3>
               <p>
-                Jogo de corrida pseudo-3D inspirado nos arcades clássicos, com
-                tráfego, curvas e cenários que mudam durante a corrida.
+                Uma versão estratégica do jogo da velha com partidas locais,
+                adversário de IA e modo online.
               </p>
               <div class="project-tags">
-                <span>HTML5</span><span>CSS3</span><span>JavaScript</span>
+                <span>React Native</span><span>Expo</span><span>TypeScript</span><span>Supabase</span>
               </div>
               <div class="project-links">
-                <a class="project-link" href="https://gutembergbs.github.io/atari-racing/" target="_blank" rel="noreferrer">
-                  Jogar agora <span aria-hidden="true">↗</span>
+                <a class="project-link" href="./jogo/">
+                  Jogar no navegador <span aria-hidden="true">↗</span>
                 </a>
-                <a class="project-link" href="https://github.com/Gutembergbs/atari-racing" target="_blank" rel="noreferrer">
-                  Ver código <span aria-hidden="true">↗</span>
+                <a class="project-link" href="https://github.com/Gutembergbs/ultimate-velha" target="_blank" rel="noreferrer">
+                  Ver código no GitHub <span aria-hidden="true">↗</span>
                 </a>
               </div>
             </div>

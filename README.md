@@ -53,9 +53,9 @@ npx expo start
 ```
 ## 🌐 Versão Web
 
-O workflow do GitHub Pages mantém o portfólio na raiz e publica o jogo Expo Web
-em `/jogo/`. O build configura esse caminho base para que os arquivos estáticos
-funcionem no subdiretório. Após o deploy, acesse:
+O workflow do GitHub Pages publica o jogo Expo Web em `/jogo/`. O build configura
+esse caminho base para que os arquivos estáticos funcionem no subdiretório.
+Após o deploy, acesse:
 
 ```text
 https://gutembergbs.github.io/ultimate-velha/jogo/
@@ -76,9 +76,14 @@ Supabase mudem.
 
 ## 📁 Portfólio
 
-O site de portfólio estático fica em [`portfolio/`](./portfolio). O workflow
-`.github/workflows/deploy-portfolio.yml` publica essa pasta no GitHub Pages após
-push para `main`. No GitHub, habilite **Settings → Pages → Source: GitHub Actions**.
+O portfólio pessoal foi separado deste projeto e está em
+[Gutembergbs/portfolio](https://github.com/Gutembergbs/portfolio), publicado em
+<https://gutembergbs.github.io/portfolio/>. A página inicial e a política de
+privacidade deste jogo permanecem neste repositório, em `public/`.
+
+O workflow `.github/workflows/deploy-game.yml` publica o jogo e as páginas
+do aplicativo no GitHub Pages após push para `main`. No GitHub, habilite
+**Settings → Pages → Source: GitHub Actions**.
 
 ## 📱 Preparar publicação na Google Play
 

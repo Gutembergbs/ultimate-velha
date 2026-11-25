@@ -1,4 +1,4 @@
-name: Deploy portfolio and game to GitHub Pages
+name: Deploy game to GitHub Pages
 
 on:
   push:
@@ -31,16 +31,17 @@ jobs:
         run: npm ci
       - name: Export Expo Web
         run: npx expo export --platform web --output-dir dist
-      - name: Assemble Pages site
+      - name: Assemble game and privacy site
         run: |
-          mkdir -p portfolio/jogo
-          cp -R dist/. portfolio/jogo/
+          mkdir -p site/jogo
+          cp -R dist/. site/jogo/
+          cp -R public/. site/
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: portfolio
+          path: site
 
   deploy:
     needs: build

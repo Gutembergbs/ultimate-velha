@@ -13,6 +13,19 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 24
   },
+  homeContentWide: {
+    maxWidth: 1080,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 64
+  },
+  homeIntro: {
+    alignItems: 'center'
+  },
+  homeIntroWide: {
+    flex: 1,
+    alignItems: 'flex-start'
+  },
   brandMark: {
     width: 76,
     height: 76,
@@ -42,6 +55,11 @@ export const styles = StyleSheet.create({
     color: '#F8FAFC',
     textAlign: 'center'
   },
+  homeTitleWide: {
+    fontSize: 46,
+    lineHeight: 54,
+    textAlign: 'left'
+  },
   subtitle: {
     color: '#A8B5C9',
     fontSize: 15,
@@ -54,12 +72,53 @@ export const styles = StyleSheet.create({
     width: '100%',
     gap: 12
   },
+  modeListWide: {
+    width: 320,
+    flexShrink: 0
+  },
+  modeBtnWide: {
+    width: '100%'
+  },
+  privacyLink: {
+    alignItems: 'center',
+    paddingVertical: 8
+  },
+  privacyLinkText: {
+    color: '#67E8F9',
+    fontSize: 13,
+    textDecorationLine: 'underline'
+  },
   gameContent: {
     flexGrow: 1,
     width: '100%',
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 20
+  },
+  gameContentWide: {
+    alignSelf: 'center',
+    maxWidth: 1180
+  },
+  gameLayout: {
+    width: '100%',
+    alignItems: 'center'
+  },
+  gameLayoutWide: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 32
+  },
+  gameBoardColumn: {
+    alignItems: 'center',
+    flexShrink: 0
+  },
+  gameInfoColumn: {
+    width: '100%',
+    maxWidth: 600,
+    alignItems: 'center'
+  },
+  gameInfoColumnWide: {
+    maxWidth: 360
   },
   gameTitle: {
     fontSize: 24,
@@ -84,6 +143,7 @@ export const styles = StyleSheet.create({
   timerPanel: {
     alignItems: 'center',
     marginBottom: 16,
+    width: '100%',
     padding: 12,
     borderRadius: 16,
     backgroundColor: '#111A2C'
@@ -167,6 +227,47 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 16,
     gap: 10
+  },
+  buttonsWide: {
+    flexDirection: 'column',
+    alignItems: 'stretch',
+    width: '100%'
+  },
+  buttonWide: {
+    width: '100%'
+  },
+  onlineContent: {
+    flexGrow: 1,
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 20
+  },
+  onlineContentWide: {
+    alignSelf: 'center',
+    maxWidth: 1240
+  },
+  onlineLayout: {
+    width: '100%',
+    alignItems: 'center',
+    gap: 22
+  },
+  onlineLayoutWide: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 32
+  },
+  onlineBoardColumn: {
+    alignItems: 'center',
+    flexShrink: 0
+  },
+  onlineInfoColumn: {
+    width: '100%',
+    maxWidth: 560,
+    alignItems: 'center'
+  },
+  onlineInfoColumnWide: {
+    maxWidth: 360
   },
   undoButton: {
     backgroundColor: '#26354B',

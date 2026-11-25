@@ -111,6 +111,7 @@ h1 { margin: 22px 0 20px; font-size: clamp(52px, 7vw, 82px); line-height: .99; l
 .contact .eyebrow { justify-content: center; margin-bottom: 16px; }
 .contact h2 { margin-bottom: 25px; }
 .site-footer { min-height: 78px; display: flex; align-items: center; justify-content: space-between; gap: 16px; border-top: 1px solid rgba(154, 168, 188, .12); color: #7e8da2; font-size: 11px; }
+.site-footer > div { display: flex; gap: 18px; }
 
 @media (max-width: 760px) {
   .page-width, .site-header { width: min(100% - 36px, 560px); }

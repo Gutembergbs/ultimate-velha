@@ -23,8 +23,11 @@ type Props = {
 };
 
 export function OnlineGameScreen({ localId, onExit }: Props) {
-    const { width } = useWindowDimensions();
-    const boardSize = Math.min(width - 32, 390);
+    const { width, height } = useWindowDimensions();
+    const isWideScreen = width >= 900;
+    const boardSize = isWideScreen
+        ? Math.max(300, Math.min(width * 0.48, height - 250, 620))
+        : Math.min(width - 32, 390);
     const game = useGameState('ONLINE');
     const online = useOnlineGame({
         localId,
@@ -87,68 +90,106 @@ export function OnlineGameScreen({ localId, onExit }: Props) {
         online.sendMove(newBoards, newWinners, nextPlayer, nextActiveBoard);
     };
 
+    const statusPanel = (
+        <>
+            <OnlineScore scores={online.scores} />
+            <OnlineStatus
+                game={game}
+                online={online}
+                lastRoundWinner={lastRoundWinner}
+            />
+            <OnlineRoom
+                online={online}
+                inputRoomId={inputRoomId}
+                setInputRoomId={setInputRoomId}
+            />
+        </>
+    );
+
+    const boardPanel = (
+        <View style={[styles.bigBoard, { width: boardSize, height: boardSize }]}>
+            {game.state.boards.map((board, idx) => (
+                <SmallBoard
+                    key={idx}
+                    board={board}
+                    index={idx}
+                    active={!game.bigWinner && (game.activeBoard === null || game.activeBoard === idx)}
+                    winnerLine={game.state.winners[idx]?.line ?? null}
+                    onMove={handleMove}
+                    renderLine={game.renderLine}
+                />
+            ))}
+
+            {game.bigWinner && (
+                <View style={[styles.bigWinLine, game.renderLine(game.bigWinner.line)]} />
+            )}
+        </View>
+    );
+
+    const actionsPanel = (
+        <>
+            <OnlineSideSelector online={online} />
+            <OnlineActions
+                onRestart={handleRestart}
+                onExit={handleExit}
+                showRestart={!!game.bigWinner || isDraw}
+                isDraw={isDraw}
+            />
+            <OnlineFooter
+                onlineCount={online.onlineCount}
+                refreshing={refreshing}
+                gameId={online.gameId}
+            />
+        </>
+    );
+
+    const infoPanel = (
+        <View style={[
+            styles.onlineInfoColumn,
+            isWideScreen && styles.onlineInfoColumnWide
+        ]}>
+            {statusPanel}
+            {actionsPanel}
+        </View>
+    );
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView
-                style={{ flex: 1 }} // ← AQUI (ESSENCIAL)
-                contentContainerStyle={{
-                    flexGrow: 1,
-                    justifyContent: 'center', // ← CENTRALIZA VERTICAL
-                    alignItems: 'center',
-                    paddingVertical: 20
-                }}
+                style={{ flex: 1, width: '100%' }}
+                contentContainerStyle={[
+                    styles.onlineContent,
+                    isWideScreen && styles.onlineContentWide
+                ]}
                 refreshControl={
                     <RefreshControl refreshing={refreshing} onRefresh={handleResync} />
                 }
             >
 
                 <OnlineHeader gameId={online.gameId} onResync={handleResync} />
-                <OnlineScore scores={online.scores} />
-                <OnlineStatus
-                    game={game}
-                    online={online}
-                    lastRoundWinner={lastRoundWinner}
-                />
-
-
-                <OnlineRoom
-                    online={online}
-                    inputRoomId={inputRoomId}
-                    setInputRoomId={setInputRoomId}
-                />
-
-                <View style={[styles.bigBoard, { width: boardSize, height: boardSize }]}>
-                    {game.state.boards.map((board, idx) => (
-                        <SmallBoard
-                            key={idx}
-                            board={board}
-                            index={idx}
-                            active={!game.bigWinner && (game.activeBoard === null || game.activeBoard === idx)}
-                            winnerLine={game.state.winners[idx]?.line ?? null}
-                            onMove={handleMove}
-                            renderLine={game.renderLine}
-                        />
-                    ))}
-
-                    {game.bigWinner && (
-                        <View style={[styles.bigWinLine, game.renderLine(game.bigWinner.line)]} />
+                <View style={[
+                    styles.onlineLayout,
+                    isWideScreen && styles.onlineLayoutWide
+                ]}>
+                    {isWideScreen ? (
+                        <>
+                            <View style={[styles.onlineBoardColumn, { width: boardSize }]}>
+                                {boardPanel}
+                            </View>
+                            {infoPanel}
+                        </>
+                    ) : (
+                        <>
+                            <View style={styles.onlineInfoColumn}>
+                                {statusPanel}
+                            </View>
+                            {boardPanel}
+                            <View style={styles.onlineInfoColumn}>
+                                {actionsPanel}
+                            </View>
+                        </>
                     )}
                 </View>
-
-                <OnlineSideSelector online={online} />
-
-                <OnlineActions
-                    onRestart={handleRestart}
-                    onExit={handleExit}
-                    showRestart={!!game.bigWinner || isDraw}
-                    isDraw={isDraw}
-                />
-                <OnlineFooter
-                    onlineCount={online.onlineCount}
-                    refreshing={refreshing}
-                    gameId={online.gameId}
-                />
-
 
             </ScrollView>
         </SafeAreaView>

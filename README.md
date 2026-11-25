@@ -17,10 +17,9 @@ Exemplo:
 
 ![Exemplo de jogada](docs/imagens/jogada.PNG)
 
-- Se o tabuleiro para onde o jogador foi enviado:
-- Já estiver completo ou
-- Já tiver um vencedor
-👉 o jogador pode escolher qualquer tabuleiro disponível
+Se o tabuleiro de destino já tiver um vencedor, mas ainda possuir casas vazias,
+o jogador deve jogar nele. Se estiver totalmente preenchido, pode escolher
+qualquer outro tabuleiro que ainda tenha casas vazias.
 
 ## 🏆 Como vencer
 

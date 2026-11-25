@@ -84,7 +84,7 @@ export function OnlineGameScreen({ localId, onExit }: Props) {
         }
 
         const nextPlayer = game.currentPlayer === 'X' ? 'O' : 'X';
-        const nextActiveBoard = getNextActiveBoard(newBoards, newWinners, cellIndex);
+        const nextActiveBoard = getNextActiveBoard(newBoards, cellIndex);
 
         game.handleMove(boardIndex, cellIndex);
         online.sendMove(newBoards, newWinners, nextPlayer, nextActiveBoard);

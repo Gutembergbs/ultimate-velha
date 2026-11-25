@@ -118,7 +118,7 @@ export function useGameState(initialMode: GameMode, online?: OnlineHook, onMove?
 
     // Próximo jogador e activeBoard
     const nextPlayer: Player = currentPlayer === 'X' ? 'O' : 'X';
-    const nextActiveBoard = getNextActiveBoard(newBoards, newWinners, cellIndex);
+    const nextActiveBoard = getNextActiveBoard(newBoards, cellIndex);
 
     setCurrentPlayer(nextPlayer);
     setActiveBoard(nextActiveBoard);

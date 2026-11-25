@@ -19,7 +19,7 @@ export function useAI(game: any) {
         if (game.activeBoard !== null) return [game.activeBoard];
         return game.state.boards
           .map((_:any, i:number) => i)
-          .filter((i:number) => !game.state.winners[i]);
+          .filter((i:number) => game.state.boards[i].some((cell:any) => cell === null));
       };
 
       const moves = game.state.boards.flat().filter((c:any)=>c).length;

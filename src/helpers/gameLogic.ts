@@ -5,11 +5,11 @@ export const emptySmallBoard = (): SmallBoardState =>
 
 export const getNextActiveBoard = (
   boards: SmallBoardState[],
-  winners: (SmallWinner | null)[],
   targetIndex: number
 ): number | null => {
   const targetBoard = boards[targetIndex];
-  if (!targetBoard || winners[targetIndex] || targetBoard.every(cell => cell !== null)) {
+  // A board remains playable until it has no empty cells, even after a win.
+  if (!targetBoard || targetBoard.every(cell => cell !== null)) {
     return null;
   }
   return targetIndex;

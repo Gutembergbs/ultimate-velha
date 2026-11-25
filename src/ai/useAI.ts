@@ -23,7 +23,7 @@ export function getBestAIMove(
       ? [activeBoard]
       : state.boards
           .map((_, i) => i)
-          .filter(i => !state.winners[i]);
+          .filter(i => state.boards[i].some(cell => cell === null));
 
   const movesPlayed =
     state.boards.flat().filter(Boolean).length;

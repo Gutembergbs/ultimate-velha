@@ -36,6 +36,7 @@ jobs:
           mkdir -p site/jogo
           cp -R dist/. site/jogo/
           cp -R public/. site/
+          cp pages/index.html site/index.html
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Upload site

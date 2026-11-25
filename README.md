@@ -79,7 +79,8 @@ Supabase mudem.
 O portfólio pessoal foi separado deste projeto e está em
 [Gutembergbs/portfolio](https://github.com/Gutembergbs/portfolio), publicado em
 <https://gutembergbs.github.io/portfolio/>. A página inicial e a política de
-privacidade deste jogo permanecem neste repositório, em `public/`.
+privacidade deste jogo permanecem neste repositório: a página inicial em
+`pages/` e a política em `public/`.
 
 O workflow `.github/workflows/deploy-game.yml` publica o jogo e as páginas
 do aplicativo no GitHub Pages após push para `main`. No GitHub, habilite

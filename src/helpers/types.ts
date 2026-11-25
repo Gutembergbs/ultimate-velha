@@ -1,5 +1,6 @@
 export type Player = 'X' | 'O' | null;
 
+
 export type SmallBoardState = Player[];
 
 export type SmallWinner = {
@@ -17,4 +18,5 @@ export type BigBoardState = {
   winners: (SmallWinner | null)[];
 };
 
-export type GameMode = 'LOCAL' | 'AI';
+export type GameMode = 'LOCAL' | 'AI' | 'ONLINE';
+

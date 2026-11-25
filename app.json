@@ -22,7 +22,8 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.gutemberg_bs.ultimatevelha"
+      "package": "com.gutemberg_bs.ultimatevelha",
+      "permissions": ["INTERNET"]
     },
     "web": {
       "favicon": "./assets/favicon.png",

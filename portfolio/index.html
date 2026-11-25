@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0b1020">
+    <meta
+      name="description"
+      content="Portfólio de Gutemberg: projetos em React Native, TypeScript e Expo."
+    >
+    <title>Gutemberg — Desenvolvedor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    >
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="wordmark" href="#inicio" aria-label="Gutemberg, início">
+        <span class="wordmark-icon">G</span>
+        <span>gutemberg<span class="accent">.dev</span></span>
+      </a>
+      <nav aria-label="Navegação principal">
+        <a href="#sobre">Sobre</a>
+        <a href="#projetos">Projetos</a>
+        <a class="nav-cta" href="https://github.com/Gutembergbs" target="_blank" rel="noreferrer">
+          GitHub <span aria-hidden="true">↗</span>
+        </a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero page-width" id="inicio">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="status-dot"></span> PORTFÓLIO DE DESENVOLVIMENTO</p>
+          <h1>Olá, eu sou<br><span class="gradient-text">Gutemberg.</span></h1>
+          <p class="hero-description">
+            Desenvolvedor mobile criando experiências digitais com React Native,
+            TypeScript e Expo.
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#projetos">Conheça meus projetos <span aria-hidden="true">↓</span></a>
+            <a class="button button-quiet" href="https://github.com/Gutembergbs" target="_blank" rel="noreferrer">
+              Meu GitHub <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+          <div class="tech-list" aria-label="Tecnologias">
+            <span>React Native</span><span>TypeScript</span><span>Expo</span>
+          </div>
+        </div>
+
+        <div class="hero-art" aria-label="Prévia do jogo Ultimate Jogo da Velha">
+          <div class="art-glow"></div>
+          <div class="game-card">
+            <div class="game-card-top"><span>ULTIMATE TIC-TAC-TOE</span><span class="live-pill">EM DESTAQUE</span></div>
+            <div class="mini-board" aria-hidden="true">
+              <span class="x">X</span><span></span><span class="o">O</span>
+              <span></span><span class="x">X</span><span></span>
+              <span class="o">O</span><span></span><span class="x">X</span>
+            </div>
+            <div class="game-card-bottom"><span>Uma jogada muda o próximo tabuleiro.</span><span class="arrow">↗</span></div>
+          </div>
+          <span class="orbit orbit-one"></span><span class="orbit orbit-two"></span>
+        </div>
+      </section>
+
+      <section class="about page-width" id="sobre">
+        <div class="section-label"><span>01</span> SOBRE MIM</div>
+        <div>
+          <h2>Transformando ideias em<br><span class="muted-heading">projetos que funcionam.</span></h2>
+          <p>
+            Gosto de aprender construindo. Neste portfólio, compartilho projetos
+            práticos, decisões de desenvolvimento e tecnologias que estou explorando.
+          </p>
+        </div>
+      </section>
+
+      <section class="projects page-width" id="projetos">
+        <div class="projects-heading">
+          <div>
+            <div class="section-label"><span>02</span> TRABALHOS SELECIONADOS</div>
+            <h2>Projetos<span class="accent">.</span></h2>
+          </div>
+          <p>Ideias feitas para aprender, experimentar<br>e entregar uma boa experiência.</p>
+        </div>
+
+        <article class="project-card">
+          <div class="project-visual">
+            <div class="project-visual-glow"></div>
+            <div class="project-board" aria-hidden="true">
+              <span class="x">X</span><span></span><span class="o">O</span>
+              <span></span><span class="o">O</span><span></span>
+              <span class="x">X</span><span></span><span class="x">X</span>
+            </div>
+            <span class="visual-caption">DESAFIE SUA ESTRATÉGIA</span>
+          </div>
+          <div class="project-info">
+            <div class="project-meta"><span>01 / APLICATIVO</span><span class="project-status">PROJETO PESSOAL</span></div>
+            <h3>Ultimate Jogo da Velha</h3>
+            <p>
+              Uma versão estratégica do jogo da velha com partidas locais,
+              adversário de IA e modo online.
+            </p>
+            <div class="project-tags">
+              <span>React Native</span><span>Expo</span><span>TypeScript</span><span>Supabase</span>
+            </div>
+            <a class="project-link" href="https://github.com/Gutembergbs/ultimate-velha" target="_blank" rel="noreferrer">
+              Ver código no GitHub <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </article>
+      </section>
+
+      <section class="contact page-width">
+        <p class="eyebrow">VAMOS CONSTRUIR ALGO?</p>
+        <h2>O próximo projeto<br>começa com uma conversa.</h2>
+        <a class="button button-primary" href="https://github.com/Gutembergbs" target="_blank" rel="noreferrer">
+          Fale comigo pelo GitHub <span aria-hidden="true">↗</span>
+        </a>
+      </section>
+    </main>
+
+    <footer class="site-footer page-width">
+      <a class="wordmark" href="#inicio"><span class="wordmark-icon">G</span><span>gutemberg<span class="accent">.dev</span></span></a>
+      <span>Feito com curiosidade e código.</span>
+      <a href="https://github.com/Gutembergbs" target="_blank" rel="noreferrer">GitHub ↗</a>
+    </footer>
+  </body>
+</html>

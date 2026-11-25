@@ -3,6 +3,18 @@ import { Player, SmallBoardState, SmallWinner, BigWinner } from './types';
 export const emptySmallBoard = (): SmallBoardState =>
   Array(9).fill(null);
 
+export const getNextActiveBoard = (
+  boards: SmallBoardState[],
+  winners: (SmallWinner | null)[],
+  targetIndex: number
+): number | null => {
+  const targetBoard = boards[targetIndex];
+  if (!targetBoard || winners[targetIndex] || targetBoard.every(cell => cell !== null)) {
+    return null;
+  }
+  return targetIndex;
+};
+
 export const winningLines = [
   [0,1,2],[3,4,5],[6,7,8],
   [0,3,6],[1,4,7],[2,5,8],

@@ -59,4 +59,34 @@ Este projeto pode ser executado no navegador usando Expo Web
 npx expo start --web
 ``` 
 
+## 📁 Portfólio
+
+O site de portfólio estático fica em [`portfolio/`](./portfolio). O workflow
+`.github/workflows/deploy-portfolio.yml` publica essa pasta no GitHub Pages após
+push para `main`. No GitHub, habilite **Settings → Pages → Source: GitHub Actions**.
+
+## 📱 Preparar publicação na Google Play
+
+O perfil `production` do EAS gera builds Android de produção com incremento
+automático da versão. Para preparar um envio:
+
+1. Crie o app no Google Play Console e conclua as informações da ficha, política
+   de privacidade, segurança dos dados e testes exigidos pela Play Console.
+2. Entre na sua conta Expo e gere o Android App Bundle:
+
+   ```bash
+   npx eas-cli@latest login
+   npx eas-cli@latest build --platform android --profile production
+   ```
+
+3. Envie primeiro para a faixa de teste interno:
+
+   ```bash
+   npx eas-cli@latest submit --platform android --profile production
+   ```
+
+O envio depende de uma conta de desenvolvedor Google Play, da configuração do
+projeto EAS e das credenciais da loja. Revise também o funcionamento do modo
+online e as políticas de acesso do Supabase antes de liberar o app.
+
 Desenvolvido com 💙 por Gutemberg

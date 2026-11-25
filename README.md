@@ -54,7 +54,16 @@ npx expo start
 ```
 ## 🌐 Versão Web
 
-Este projeto pode ser executado no navegador usando Expo Web
+O workflow do GitHub Pages mantém o portfólio na raiz e publica o jogo Expo Web
+em `/jogo/`. O build configura esse caminho base para que os arquivos estáticos
+funcionem no subdiretório. Após o deploy, acesse:
+
+```text
+https://gutembergbs.github.io/ultimate-velha/jogo/
+```
+
+Para testar localmente:
+
 ```bash
 npx expo start --web
 ``` 

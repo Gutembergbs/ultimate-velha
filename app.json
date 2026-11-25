@@ -29,6 +29,9 @@
       "favicon": "./assets/favicon.png",
       "bundler": "metro"
     },
+    "experiments": {
+      "baseUrl": "/ultimate-velha/jogo"
+    },
     "extra": {
       "eas": {
         "projectId": "f93131bc-a679-4ad3-8e20-95904e1f43a7"

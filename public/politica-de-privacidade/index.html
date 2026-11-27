@@ -63,10 +63,33 @@
         }
       }
     </style>
+    <script>
+      function voltarAoApp() {
+        if (/Android/i.test(navigator.userAgent)) {
+          const fallback = encodeURIComponent(
+            'https://play.google.com/store/apps/details?id=com.gutemberg_bs.ultimatevelha'
+          );
+          window.location.href =
+            'intent://home#Intent;scheme=ultimatevelha;package=com.gutemberg_bs.ultimatevelha;S.browser_fallback_url=' +
+            fallback +
+            ';end';
+          return;
+        }
+
+        if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+          window.location.href = 'ultimatevelha://home';
+          return;
+        }
+
+        window.location.href = '../jogo/';
+      }
+    </script>
   </head>
   <body>
     <main>
-      <a href="../jogo/">← Voltar ao jogo</a>
+      <a href="../jogo/" onclick="event.preventDefault(); voltarAoApp(); return false;">
+        ← Voltar ao aplicativo
+      </a>
       <h1>Política de Privacidade</h1>
       <p class="updated">Ultimate Jogo da Velha · Última atualização: 25 de novembro de 2026</p>
 

@@ -33,6 +33,13 @@ export const checkWinnerWithLine = (
   return null;
 };
 
+export const isSmallBoardFull = (board: SmallBoardState): boolean =>
+  board.every(cell => cell !== null);
+
+export const isBigBoardDraw = (
+  winners: (SmallWinner | null)[]
+): boolean => winners.every(winner => winner !== null);
+
 export const checkBigWinnerWithLine = (
   winners: (SmallWinner | null)[]
 ): BigWinner => {

@@ -1,9 +1,10 @@
 import { View, Text } from 'react-native';
 import { styles } from '../../styles/styles';
+import { isBigBoardDraw } from '../../helpers/gameLogic';
 
 export function OnlineStatus({ game, online, lastRoundWinner }: any) {
 
-  const isDraw = game.state.winners.every((w: any) => w !== null);
+  const isDraw = isBigBoardDraw(game.state.winners);
 
   const didLoseBySequence =
     lastRoundWinner &&

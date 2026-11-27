@@ -11,8 +11,20 @@ export function OnlineRoom({
 
   return (
     <View style={{ width: '90%', marginBottom: 20 }}>
-      <TouchableOpacity onPress={online.createRoom} style={[styles.modeBtn, { marginBottom: 10 }]}>
-        <Text style={styles.buttonText}>Criar Nova Sala</Text>
+      {online.error && (
+        <Text style={{ color: '#FCA5A5', textAlign: 'center', marginBottom: 10 }}>
+          {online.error}
+        </Text>
+      )}
+      <TouchableOpacity
+        accessibilityRole="button"
+        disabled={online.loading}
+        onPress={online.createRoom}
+        style={[styles.modeBtn, { marginBottom: 10, opacity: online.loading ? 0.6 : 1 }]}
+      >
+        <Text style={styles.buttonText}>
+          {online.loading ? 'Aguarde...' : 'Criar Nova Sala'}
+        </Text>
       </TouchableOpacity>
 
       <View style={{ flexDirection: 'row' }}>
@@ -32,7 +44,12 @@ export function OnlineRoom({
             marginRight: 5
           }}
         />
-        <TouchableOpacity onPress={() => online.joinRoom(inputRoomId)} style={styles.modeBtn}>
+        <TouchableOpacity
+          accessibilityRole="button"
+          disabled={online.loading}
+          onPress={() => online.joinRoom(inputRoomId)}
+          style={[styles.modeBtn, { opacity: online.loading ? 0.6 : 1 }]}
+        >
           <Text style={styles.buttonText}>Entrar</Text>
         </TouchableOpacity>
       </View>

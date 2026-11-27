@@ -1,7 +1,8 @@
 import { useEffect, useState, useRef } from 'react';
 import { supabase } from '../services/supabase';
 import { BigBoardState, Player } from '../helpers/types';
-import { Platform } from 'react-native';
+import { Alert, Platform } from 'react-native';
+import { checkBigWinnerWithLine } from '../helpers/gameLogic';
 
 
 let storage: any;
@@ -34,6 +35,9 @@ export function useOnlineGame({
     const [players, setPlayers] = useState<{ X?: string; O?: string }>({});
     const [scores, setScores] = useState({ X: 0, O: 0 });
     const [onlineCount, setOnlineCount] = useState(0);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [resetting, setResetting] = useState(false);
     const presenceRef = useRef<any>(null);
     const gameChannelRef = useRef<any>(null);
 
@@ -45,26 +49,25 @@ export function useOnlineGame({
         if (!side || !gameId) return;
 
         try {
-            const { data: game } = await supabase.from('games').select('players').eq('id', gameId).single();
-            const currentPlayers = (game?.players as Record<string, string>) || {};
+            const { data, error } = await supabase.rpc('select_game_side', {
+                p_game_id: gameId,
+                p_side: side,
+                p_local_id: localId
+            });
 
-            if (currentPlayers[side]) {
-                alert(`O jogador ${side} já foi escolhido por outra pessoa.`);
-                return;
-            }
-
-            const updatedPlayers = { ...currentPlayers, [side]: localId };
-
-            const { error } = await supabase.from('games')
-                .update({ players: updatedPlayers })
-                .eq('id', gameId);
-
-            if (!error) {
+            if (!error && data?.ok) {
                 setSymbol(side);
-                setPlayers(updatedPlayers);
+                setPlayers(data.players);
+                setError(null);
+            } else if (data?.error) {
+                Alert.alert('Lado ocupado', data.error);
+                setError(data.error);
+            } else {
+                setError(error?.message ?? 'Não foi possível selecionar o lado.');
             }
         } catch (err) {
             console.error("Erro ao selecionar lado:", err);
+            setError('Não foi possível selecionar o lado.');
         }
     };
 
@@ -88,6 +91,11 @@ export function useOnlineGame({
                 .update({ players: currentPlayers })
                 .eq('id', gameId);
 
+            if (presenceRef.current) supabase.removeChannel(presenceRef.current);
+            if (gameChannelRef.current) supabase.removeChannel(gameChannelRef.current);
+            presenceRef.current = null;
+            gameChannelRef.current = null;
+
             // Reseta estados locais
             setGameId(null);
             setSymbol(null);
@@ -96,6 +104,7 @@ export function useOnlineGame({
 
         } catch (err) {
             console.error("Erro ao sair da sala:", err);
+            setError('Não foi possível sair da sala.');
         }
     };
 
@@ -103,6 +112,8 @@ export function useOnlineGame({
     // CRIAR SALA
     // ---------------------
     const createRoom = async () => {
+        setLoading(true);
+        setError(null);
         const id = Math.random().toString(36).substring(2, 10).toUpperCase();
         const initialBoard = Array(9).fill(null).map(() => Array(9).fill(null));
         const initialWinners = Array(9).fill(null);
@@ -119,7 +130,12 @@ export function useOnlineGame({
             score_o: 0
         }]);
 
-        if (error) return console.error('Erro ao criar sala:', error);
+        if (error) {
+            console.error('Erro ao criar sala:', error);
+            setError('Não foi possível criar a sala.');
+            setLoading(false);
+            return;
+        }
 
         await storage.setItem('@last_room_id', id);
         setGameId(id);
@@ -128,20 +144,32 @@ export function useOnlineGame({
         setActiveBoard(null);
         setBigWinner(null);
         subscribeRoom(id);
+        setLoading(false);
     };
 
     // ---------------------
     // ENTRAR NA SALA
     // ---------------------
     const joinRoom = async (id: string) => {
-        const { data, error } = await supabase.from('games').select('*').eq('id', id).single();
-
-        if (error || !data) {
-            alert('Sala não encontrada');
+        const roomId = id.trim().toUpperCase();
+        if (!roomId) {
+            setError('Informe o ID da sala.');
             return;
         }
 
-        setGameId(id);
+        setLoading(true);
+        setError(null);
+        const { data, error } = await supabase.from('games').select('*').eq('id', roomId).single();
+
+        if (error || !data) {
+            Alert.alert('Sala não encontrada', 'Confira o ID e tente novamente.');
+            setError('Sala não encontrada.');
+            setLoading(false);
+            return;
+        }
+
+        setGameId(roomId);
+        await storage.setItem('@last_room_id', roomId);
         const currentPlayers = data.players || {};
         setPlayers(currentPlayers);
         setScores({ X: data.score_x || 0, O: data.score_o || 0 });
@@ -152,7 +180,9 @@ export function useOnlineGame({
         setState({ boards: data.board, winners: data.winners });
         setCurrentPlayer(data.current_player);
         setActiveBoard(data.active_board);
-        subscribeRoom(id);
+        setBigWinner(checkBigWinnerWithLine(data.winners || []));
+        subscribeRoom(roomId);
+        setLoading(false);
     };
 
     // ---------------------
@@ -200,9 +230,8 @@ export function useOnlineGame({
                     setActiveBoard(g.active_board);
                     setPlayers(g.players || {});
                     setScores({ X: g.score_x ?? 0, O: g.score_o ?? 0 });
-
-                    const isAllNull = g.board.every((b: any[]) => b.every(c => c === null));
-                    if (isAllNull) setBigWinner(null);
+                    setBigWinner(checkBigWinnerWithLine(g.winners || []));
+                    setError(null);
 
                     if (g.players?.X === localId) setSymbol('X');
                     else if (g.players?.O === localId) setSymbol('O');
@@ -215,35 +244,45 @@ export function useOnlineGame({
     };
 
 
-    const sendMove = async (boards: any, winners: any, nextPlayer: Player, activeBoard: number | null) => {
+    const sendMove = async (
+        boards: any[],
+        winners: any[],
+        nextPlayer: Player,
+        activeBoard: number | null,
+        expectedPlayer: Player
+    ) => {
         if (!gameId) return;
-        await supabase.from('games').update({
-            board: boards,
-            winners: winners,
-            current_player: nextPlayer,
-            active_board: activeBoard
-        }).eq('id', gameId);
+        const { data, error } = await supabase.rpc('submit_game_move', {
+            p_game_id: gameId,
+            p_local_id: localId,
+            p_expected_player: expectedPlayer,
+            p_board: boards,
+            p_winners: winners,
+            p_next_player: nextPlayer,
+            p_active_board: activeBoard
+        });
+
+        if (error || data !== true) {
+            setError('Não foi possível enviar a jogada.');
+        }
     };
 
     const resetOnlineGame = async (winnerPlayer: Player | null) => {
-        if (!gameId) return;
-        const nextScoreX = winnerPlayer === 'X' ? scores.X + 1 : scores.X;
-        const nextScoreO = winnerPlayer === 'O' ? scores.O + 1 : scores.O;
-
-        await supabase.from('games').update({
-            board: Array(9).fill(null).map(() => Array(9).fill(null)),
-            winners: Array(9).fill(null),
-            current_player: 'X',
-            active_board: null,
-            score_x: nextScoreX,
-            score_o: nextScoreO
-        }).eq('id', gameId);
+        if (!gameId || resetting) return;
+        setResetting(true);
+        setError(null);
+        const { data, error } = await supabase.rpc('reset_online_game', {
+            p_game_id: gameId,
+            p_winner: winnerPlayer
+        });
+        if (error || data !== true) setError('Não foi possível reiniciar a partida.');
+        setResetting(false);
     };
 
     const resyncGame = async () => {
         if (!gameId) return;
-
-        console.log('🔄 Re-sincronizando jogo...');
+        setLoading(true);
+        setError(null);
 
         // Remove subscriptions antigas
         if (presenceRef.current) {
@@ -263,7 +302,11 @@ export function useOnlineGame({
             .eq('id', gameId)
             .single();
 
-        if (error || !data) return;
+        if (error || !data) {
+            setError('Não foi possível sincronizar a partida.');
+            setLoading(false);
+            return;
+        }
 
         // Atualiza estado local
         setState({ boards: data.board, winners: data.winners });
@@ -276,13 +319,26 @@ export function useOnlineGame({
         else if (data.players?.O === localId) setSymbol('O');
         else setSymbol(null);
 
-        setBigWinner(null);
+        setBigWinner(checkBigWinnerWithLine(data.winners || []));
 
         // Recria realtime
         subscribeRoom(gameId);
+        setLoading(false);
     };
 
+    useEffect(() => {
+        let mounted = true;
 
+        storage.getItem('@last_room_id').then((id: string | null) => {
+            if (mounted && id) joinRoom(id);
+        });
+
+        return () => {
+            mounted = false;
+            if (presenceRef.current) supabase.removeChannel(presenceRef.current);
+            if (gameChannelRef.current) supabase.removeChannel(gameChannelRef.current);
+        };
+    }, [localId]);
 
     return {
         gameId,
@@ -290,6 +346,9 @@ export function useOnlineGame({
         players,
         scores,
         onlineCount,
+        loading,
+        error,
+        resetting,
         selectSide,
         leaveRoom, // Adicionado aqui
         createRoom,

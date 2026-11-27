@@ -3,7 +3,8 @@ import {
   emptySmallBoard,
   checkWinnerWithLine,
   checkBigWinnerWithLine,
-  getNextActiveBoard
+  getNextActiveBoard,
+  isSmallBoardFull
 } from '../helpers/gameLogic';
 import { BigBoardState, Player, GameMode } from '../helpers/types';
 import { styles } from '../styles/styles';
@@ -16,7 +17,13 @@ type HistoryItem = {
 
 type OnlineHook = {
   symbol: Player | null;
-  sendMove: (boards: any, winners: any, nextPlayer: Player, activeBoard: number | null) => void;
+  sendMove: (
+    boards: any[],
+    winners: any[],
+    nextPlayer: Player,
+    activeBoard: number | null,
+    expectedPlayer: Player
+  ) => void;
 };
 
 export function useGameState(initialMode: GameMode, online?: OnlineHook, onMove?: () => void) {
@@ -104,9 +111,12 @@ export function useGameState(initialMode: GameMode, online?: OnlineHook, onMove?
     const newWinners = [...state.winners];
     const sw = checkWinnerWithLine(newBoards[boardIndex]);
 
-    // ✅ Só define vencedor se ainda não houver
-    if (sw && !newWinners[boardIndex]) {
-      newWinners[boardIndex] = sw;
+    if (!newWinners[boardIndex]) {
+      if (sw) {
+        newWinners[boardIndex] = sw;
+      } else if (isSmallBoardFull(newBoards[boardIndex])) {
+        newWinners[boardIndex] = { player: null, line: null };
+      }
     }
 
 
@@ -129,7 +139,13 @@ export function useGameState(initialMode: GameMode, online?: OnlineHook, onMove?
         state.winners[i] ? state.winners[i] : w
       );
 
-      online.sendMove(newBoards, safeWinners, nextPlayer, nextActiveBoard);
+      online.sendMove(
+        newBoards,
+        safeWinners,
+        nextPlayer,
+        nextActiveBoard,
+        currentPlayer
+      );
     }
 
   };

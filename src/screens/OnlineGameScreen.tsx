@@ -2,7 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { SafeAreaView, ScrollView, View, RefreshControl, useWindowDimensions } from 'react-native';
 import { styles } from '../styles/styles';
 import { Player } from '../helpers/types';
-import { checkWinnerWithLine, getNextActiveBoard } from '../helpers/gameLogic';
+import {
+  checkWinnerWithLine,
+  getNextActiveBoard,
+  isSmallBoardFull,
+  isBigBoardDraw
+} from '../helpers/gameLogic';
 
 import { SmallBoard } from '../components/SmallBoard';
 import { useGameState } from '../hooks/useGameState';
@@ -49,7 +54,7 @@ export function OnlineGameScreen({ localId, onExit }: Props) {
 
     const [lastRoundWinner, setLastRoundWinner] = useState<Player | null>(null);
 
-    const isDraw = !game.bigWinner && game.state.winners.every(w => w !== null);
+    const isDraw = !game.bigWinner && isBigBoardDraw(game.state.winners);
 
     const handleResync = async () => {
         setRefreshing(true);
@@ -80,14 +85,24 @@ export function OnlineGameScreen({ localId, onExit }: Props) {
         const newWinners = [...game.state.winners];
         if (!newWinners[boardIndex]) {
             const sw = checkWinnerWithLine(newBoards[boardIndex]);
-            if (sw) newWinners[boardIndex] = sw;
+            if (sw) {
+                newWinners[boardIndex] = sw;
+            } else if (isSmallBoardFull(newBoards[boardIndex])) {
+                newWinners[boardIndex] = { player: null, line: null };
+            }
         }
 
         const nextPlayer = game.currentPlayer === 'X' ? 'O' : 'X';
         const nextActiveBoard = getNextActiveBoard(newBoards, cellIndex);
 
         game.handleMove(boardIndex, cellIndex);
-        online.sendMove(newBoards, newWinners, nextPlayer, nextActiveBoard);
+        online.sendMove(
+            newBoards,
+            newWinners,
+            nextPlayer,
+            nextActiveBoard,
+            game.currentPlayer
+        );
     };
 
     const statusPanel = (
@@ -134,6 +149,7 @@ export function OnlineGameScreen({ localId, onExit }: Props) {
                 onExit={handleExit}
                 showRestart={!!game.bigWinner || isDraw}
                 isDraw={isDraw}
+                resetting={online.resetting}
             />
             <OnlineFooter
                 onlineCount={online.onlineCount}

@@ -13,6 +13,7 @@ import { GameMode } from '../helpers/types';
 import { useGameState } from '../hooks/useGameState';
 import { useTimer } from '../hooks/useTimer';
 import { useAI } from '../hooks/useAI';
+import { isBigBoardDraw } from '../helpers/gameLogic';
 
 type Props = {
   mode: GameMode;
@@ -40,7 +41,7 @@ export function GameScreen({ mode, onExit }: Props) {
 
   const isDraw =
     !game.bigWinner &&
-    game.state.winners.every(w => w !== null);
+    isBigBoardDraw(game.state.winners);
 
   React.useEffect(() => {
     if (game.bigWinner || isDraw) {

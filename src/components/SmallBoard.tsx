@@ -19,6 +19,9 @@ export function SmallBoard({
     <View style={[styles.smallBoard,!active&&styles.disabledBoard]}>
       {board.map((c,i)=>(
         <TouchableOpacity key={i} style={styles.cell}
+          accessibilityRole="button"
+          accessibilityLabel={`Tabuleiro ${index + 1}, casa ${i + 1}${c ? `, ocupada por ${c}` : ', vazia'}`}
+          disabled={!active || !!c}
           onPress={()=>onMove(index,i)}>
           <Text style={[
             styles.cellText,
